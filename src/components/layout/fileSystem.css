@@ -1,0 +1,116 @@
+
+/* ── File System Panel ──────────────────────────────────── */
+.file-system-container {
+  position: absolute;
+  width: 54%;
+  max-height: 62%;
+  border: 1.5px solid #dbeafe;
+  border-radius: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  z-index: 50;
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(37,99,235,0.13);
+  overflow: hidden;
+}
+
+.folder-list {
+  width: 38%;
+  background: #f0f4ff;
+  border-right: 1.5px solid #dbeafe;
+  padding: 1.2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.folder-list p {
+  padding: 0.65rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 0 8px 8px 0;
+  margin: 0 0.5rem 0 0;
+}
+
+.folder-list p:first-child {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  cursor: default;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #dbeafe;
+  border-radius: 0;
+  margin: 0 0 0.4rem;
+}
+
+.folder-list p:hover:not(:first-child) {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-list::-webkit-scrollbar { width: 5px; }
+.file-list::-webkit-scrollbar-track { background: transparent; }
+.file-list::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 99px; }
+
+.file-list-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 9px;
+  border: 1.5px solid #e0e9ff;
+  background: #f8faff;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  gap: 1rem;
+}
+
+.file-list-card:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  transform: translateX(2px);
+}
+
+.file-list-card--active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  cursor: default;
+}
+
+.file-list-card--active > div:last-child p {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.file-list-card p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.file-list-card > div:first-child p {
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.file-list-card > div:last-child p {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
