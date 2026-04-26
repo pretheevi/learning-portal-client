@@ -234,3 +234,40 @@
   color: #1e40af;
   line-height: 1;
 }
+
+
+.quiz-unlock-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.2rem;
+  border-radius: 10px;
+  border: 1.5px solid;
+}
+
+.quiz-unlock-status--unlocked {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.quiz-unlock-status--locked {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.quiz-unlock-percentage {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.quiz-unlock-status--unlocked .quiz-unlock-percentage { color: #15803d; }
+.quiz-unlock-status--locked  .quiz-unlock-percentage { color: #c2410c; }
+
+.quiz-unlock-msg {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.quiz-unlock-status--unlocked .quiz-unlock-msg { color: #166534; }
+.quiz-unlock-status--locked  .quiz-unlock-msg { color: #9a3412; }

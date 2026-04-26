@@ -48,13 +48,13 @@ function AssignmentQuestions({ onFinish }) {
     }
   }
 
-  const assignmentSubmit = async () => {
-    try{
+  const assignmentSubmit = async (finalScore, finalTotalScore) => {
+    try {
       const url = `/dashboard/assignment/${assignment_id}/submission`
-      const data = {
-        quiz_score: score
-      }
-      const response = await API.post(url, data)
+      await API.post(url, {
+        quiz_score: finalScore,
+        total_possible_score: finalTotalScore   // ✅ needed for unlock logic
+      })
     } catch (err) {
       console.log(err.response?.data)
     }
@@ -63,11 +63,11 @@ function AssignmentQuestions({ onFinish }) {
   const handleNext = () => {
     const next = currentIndex + 1
     if (next >= questions.length) {
-      dispatch({type: 'FINISH'})
-      assignmentSubmit()
+      dispatch({ type: 'FINISH' })
+      assignmentSubmit(score, totalScore)   // ✅ pass both values at finish time
       return
     }
-    dispatch({type: 'NEXT_QUESTION'})
+    dispatch({ type: 'NEXT_QUESTION' })
   }
 
   const quitAssignment = () => {
@@ -78,14 +78,29 @@ function AssignmentQuestions({ onFinish }) {
 
   // BUG FIX 1: was '/dashboard/files' which doesn't exist as a route
   if (finished) {
+    const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0
+    const unlocked = percentage >= 80
+
     return (
       <div className="quizCard">
         <div className="quiz-complete-icon">✓</div>
         <h1>Quiz Completed!</h1>
+
         <div className="quiz-score-badge">
           <span className="quiz-score-label">Final Score</span>
           <span className="quiz-score-value">{score} / {totalScore}</span>
         </div>
+
+        {/* ✅ percentage */}
+        <div className={`quiz-unlock-status ${unlocked ? 'quiz-unlock-status--unlocked' : 'quiz-unlock-status--locked'}`}>
+          <span className="quiz-unlock-percentage">{percentage}%</span>
+          <span className="quiz-unlock-msg">
+            {unlocked
+              ? '🔓 Next assignment unlocked!'
+              : `🔒 Score 80% or above to unlock next assignment (${Math.ceil(totalScore * 0.8)} / ${totalScore} needed)`}
+          </span>
+        </div>
+
         <button className="btn btn-primary quiz-submit-btn" onClick={() => { onFinish?.(); navigate('/dashboard') }}>
           ← Back to Dashboard
         </button>

@@ -1,0 +1,346 @@
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  gap: 1rem;
+  width: 100%;
+}
+
+.profile-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1060px;
+}
+
+
+.profile-card {
+  width: 100%;
+  max-width: 520px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.profile-stats-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Avatar */
+.profile-avatar-ring {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #2563eb, #818cf8);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #eff6ff;
+  border: 3px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar span {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2563eb;
+  font-family: var(--font-ui);
+}
+
+/* Info */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.profile-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-transform: capitalize;
+  background: linear-gradient(135deg, #1e40af, #2563eb, #6366f1, #a855f7, #2563eb);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: nameColorShift 4s ease infinite;
+}
+
+@keyframes nameColorShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.profile-badge {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.profile-bio {
+  font-family: var(--font-ui);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Divider */
+.profile-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #f1f5f9;
+}
+
+/* Details */
+.profile-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.profile-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.875rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.profile-detail-label {
+  font-family: var(--font-ui);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.profile-detail-value {
+  font-family: var(--font-ui);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-detail-id {
+  font-family: monospace;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+/* Actions */
+.profile-actions {
+  width: 100%;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.profile-actions .btn {
+  flex: 1;
+  justify-content: center;
+  padding: 0.65rem;
+  font-size: var(--font-sm);
+}
+
+/* Skeleton loading */
+.profile-skeleton {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+}
+
+.skeleton-text-lg {
+  width: 140px;
+  height: 20px;
+}
+
+.skeleton-text-sm {
+  width: 200px;
+  height: 14px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.profile-error {
+  font-family: var(--font-ui);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 480px) {
+  .profile-wrapper {
+    padding: 1rem;
+  }
+  .profile-card {
+    padding: 2rem 1.25rem;
+  }
+}
+
+
+.profile-back {
+  width: 100%;
+  max-width: 1060px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.profile-back:hover {
+  color: #2563eb;
+}
+
+.profile-back-arrow {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.stats-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin: 0;
+}
+
+.stats-empty {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.stats-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stats-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stats-skill {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-transform: capitalize;
+}
+
+.stats-pct {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.stats-bar {
+  width: 100%;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.stats-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.stats-earned {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* ── Small screen: stack vertically ── */
+@media (max-width: 720px) {
+  .profile-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile-card {
+    max-width: 100%;
+  }
+}

@@ -2,34 +2,41 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './auth.css'
 import API from '../axios/api'
+import toast from 'react-hot-toast'
 
 function Auth() {
   const navigate = useNavigate()
-  const [mode, setMode] = useState('login')
+  const [mode, setMode] = useState('signin')
   const [form, setForm] = useState({ name: '', email: '', password: '' })
-
-  const isLogin = mode === 'login'
+  const [loading, setLoading] = useState(false)
+  const isLogin = mode === 'signin'
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-const handleSubmit = async (e) => {
-  e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const url = `/auth/${mode}`
+      const response = await API.post(url, form)
+      toast.success(response.data.message)
 
-  try {
-    const url = `/auth/${mode === 'login' ? 'signin' : 'signup'}`
-    const response = await API.post(url, form)
-    const token = response.data.data
-    localStorage.setItem('token', token)
-    navigate('/dashboard')
-    console.log(response.data)
-  } catch (error) {
-    console.log(error.response.data)
+      if (mode === 'signup') {
+        setMode('signin')
+        setForm({ name: '', email: '', password: '' })
+      } else {
+        const token = response.data.data
+        localStorage.setItem('token', token)
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Something went wrong')
+    } finally {
+      setLoading(false)
+    }
   }
-}
-
-
 
   return (
     <div className='auth-wrapper'>
@@ -51,7 +58,6 @@ const handleSubmit = async (e) => {
               />
             </div>
           )}
-
           <div className='auth-field'>
             <label className='auth-label'>Email</label>
             <input
@@ -64,7 +70,6 @@ const handleSubmit = async (e) => {
               required
             />
           </div>
-
           <div className='auth-field'>
             <label className='auth-label'>Password</label>
             <input
@@ -77,20 +82,17 @@ const handleSubmit = async (e) => {
               required
             />
           </div>
-
-          <button className='btn btn-primary' type='submit'>
-            {isLogin ? 'Login' : 'Register'}
+          <button className='btn btn-primary' type='submit' disabled={loading}>
+            {loading ? (isLogin ? 'Signing in...' : 'Registering...') : (isLogin ? 'Sign In' : 'Register')}
           </button>
-
         </form>
-
         <p className='auth-switch'>
           {isLogin ? "Don't have an account?" : 'Already have an account?'}
           <span className='auth-switch-link' onClick={() => {
-            setMode(isLogin ? 'register' : 'login')
+            setMode(isLogin ? 'signup' : 'signin')
             setForm({ name: '', email: '', password: '' })
           }}>
-            {isLogin ? ' Register' : ' Login'}
+            {isLogin ? ' Register' : ' Sign In'}
           </span>
         </p>
       </div>
