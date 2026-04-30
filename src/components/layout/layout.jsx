@@ -5,12 +5,13 @@ import Auth from '../auth/auth.jsx'
 import AssignmentQuestions from '../quiz/quiz.jsx'
 import Code from '../code/code.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolder, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faMessage, faUser } from '@fortawesome/free-solid-svg-icons'
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import API from '../axios/api.js'
 import { useEffect, useRef, useState } from 'react'
 import Profile from '../profile/profile.jsx'
+import Chat from '../chat/chat.jsx'
 
 function formatDate(dateString) {
   const date = new Date(dateString)
@@ -47,7 +48,7 @@ function Layout() {
     if (timeoutRef.current) return
     setIsLoading(true)
     timeoutRef.current = setTimeout(async () => {
-      const path = `/dashboard/assignment?assignmentType=${assignmentType}&language=${language === 'HTML5' ? 'HTML' : language}&limit=10&offset=0`
+      const path = `/dashboard/assignment?assignmentType=${assignmentType}&skill_type=${language === 'HTML5' ? 'HTML' : language}&limit=10&offset=0`
       try {
         const response = await API.get(path)
         console.log(response.data)
@@ -80,16 +81,41 @@ function Layout() {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimIndex(prev => (prev + 1) % animations.length)
-    }, 3 * 60 * 1000)  // every 3 minutes
+    }, 1 * 60 * 1000)  // every 1 minute
 
     return () => clearInterval(interval)
   }, [])
 
+
+  // Layout.jsx
+const [messages, setMessages] = useState([])
+const wsRef = useRef(null)
+
+  useEffect(() => {
+  const token = localStorage.getItem('token')  // or wherever you store JWT
+  
+  wsRef.current = new WebSocket(`ws://localhost:8080/ws?token=${token}`)
+
+  wsRef.current.onmessage = (event) => {
+    const payload = JSON.parse(event.data)
+
+    if (payload.type === 'history') {
+        setMessages(payload.data)   
+        console.log(payload)       // load history on connect
+      } else if (payload.type === 'announcement') {
+        setMessages(prev => [...prev, payload.data])  // append new message
+      }
+    }
+
+    wsRef.current.onerror = (err) => console.log('WS error:', err)
+
+    return () => {
+      wsRef.current?.close()   // ✅ clean up on logout/unmount
+    }
+  }, [])
+
   return (
     <div className='bg-container'>
-      {/* <div className='bg-gif'>
-        <img src='/gif.gif' alt='' />
-      </div> */}
       <div className='bg-gif'>
         <DotLottieReact
           className='bg-gif-lottie'
@@ -104,6 +130,7 @@ function Layout() {
         <Routes>
           <Route element={<AssignmentQuestions onFinish={() => setActiveAssignmentId(null)} />} path='assignment/:assignment_id' />
           <Route element={<Code onFinish={() => setActiveAssignmentId(null)} />} path='assignmentCode/:problem_id' />
+          <Route element={<Chat messages={messages} />} path='chat' />
           <Route element={<Profile />} path='profile' />              
         </Routes>
       </div>
@@ -163,14 +190,13 @@ function Layout() {
       )}
 
       <nav className='nav-container'>
-        <div
-          className={`nav-icon ${fileSystem ? 'nav-icon--active' : ''}`}
-          onClick={() => setFileSystem(prev => !prev)}>
+        <div className={`nav-icon ${fileSystem ? 'nav-icon--active' : ''}`} onClick={() => setFileSystem(prev => !prev)}>
           <FontAwesomeIcon icon={faFolder} />
         </div>
-        <div className='nav-icon' 
-          onClick={() => navigate(`/dashboard/profile`)}
-        >
+        <div className='nav-icon' onClick={() => navigate(`/dashboard/chat`)} >
+          <FontAwesomeIcon icon={faMessage} />
+        </div>
+        <div className='nav-icon' onClick={() => navigate(`/dashboard/profile`)} >
           <FontAwesomeIcon icon={faUser} />
         </div>
       </nav>

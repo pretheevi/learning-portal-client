@@ -85,7 +85,7 @@
 }
 
 .bg-gif-lottie {
-  width: 800px;
+  width: 400px;
   object-fit: contain;
   opacity: 1;
   mix-blend-mode: multiply;

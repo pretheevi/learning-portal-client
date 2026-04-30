@@ -1,7 +1,7 @@
 import axios from 'axios'
-const http = ["http://192.168.1.6:8080/api", "http://localhost:8080/api"]
+const BASE_URLS = ["http://localhost:8080/api"]
 const API = axios.create({
-  baseURL: http[1], 
+  baseURL: BASE_URLS[0], 
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

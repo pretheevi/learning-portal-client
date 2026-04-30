@@ -47,7 +47,7 @@
   --btn-disabled-text: #93c5fd;
 
   /* button shape */
-  --btn-radius: 9px;
+  --btn-radius: 5px;
   --btn-padding-y: 0.72rem;
   --btn-padding-x: 1.6rem;
   --btn-font-size: var(--font-sm);

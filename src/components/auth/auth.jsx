@@ -10,19 +10,15 @@ function Auth() {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const isLogin = mode === 'signin'
-
-  const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
+  const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     try {
       const url = `/auth/${mode}`
-      const response = await API.post(url, form)
+      const data = mode === 'signin' ? { email: form.email, password: form.password } : { name: form.name, email: form.email, password: form.password }
+      const response = await API.post(url, data)
       toast.success(response.data.message)
-
       if (mode === 'signup') {
         setMode('signin')
         setForm({ name: '', email: '', password: '' })
