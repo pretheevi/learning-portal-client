@@ -37,35 +37,27 @@ function Layout() {
   const [animIndex, setAnimIndex] = useState(0)
   const [fileSystem, setFileSystem] = useState(false)
   const [assignments, setAssignments] = useState([])
-  const [assignmentLazyLoading, setAssignmentLazyLoading] = useState(false)
   const [assignmentType, setAssignmentType] = useState('quiz')
-  // FIX: track which assignment is currently open
   const [activeAssignmentId, setActiveAssignmentId] = useState(null)
-  const timeoutRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false) 
+
   const getAssignment = async (assignmentType, language) => {
-    // ✅ already waiting, ignore repeat click
-    if (timeoutRef.current) return
+    if (isLoading) return
     setIsLoading(true)
-    timeoutRef.current = setTimeout(async () => {
-      const path = `/dashboard/assignment?assignmentType=${assignmentType}&skill_type=${language === 'HTML5' ? 'HTML' : language}&limit=10&offset=0`
-      try {
-        const response = await API.get(path)
-        console.log(response.data)
-        setAssignments(response.data.data)
-      } catch (err) {
-        console.log(err.response?.data)
-      } finally {
-        // ✅ reset after done, so next click works
-        timeoutRef.current = null
-        setIsLoading(false)
-      }
-    }, 2000)
+    const path = `/dashboard/assignment?assignmentType=${assignmentType}&skill_type=${language === 'HTML5' ? 'HTML' : language}&limit=10&offset=0`
+    try {
+      const response = await API.get(path)
+      console.log(response.data)
+      setAssignments(response.data.data)
+    } catch (err) {
+      console.log(err.response?.data)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  // ✅ block navigation if locked
   const handleAssignmentClick = (as, assignmentType) => {
-    if (!as.is_unlocked) return          // locked — do nothing
+    if (!as.is_unlocked) return
     setActiveAssignmentId(as.assignment_id)
     if (assignmentType === 'quiz') {
       navigate(`/dashboard/assignment/${as.assignment_id}`)
@@ -75,30 +67,27 @@ function Layout() {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {navigate('/'); return}
     setActiveAssignmentId('')
   }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimIndex(prev => (prev + 1) % animations.length)
-    }, 1 * 60 * 1000)  // every 1 minute
-
+    }, 1 * 30 * 1000)  // every 1 minute
     return () => clearInterval(interval)
   }, [])
 
-
-  // Layout.jsx
-const [messages, setMessages] = useState([])
-const wsRef = useRef(null)
+    // Layout.jsx
+  const [messages, setMessages] = useState([])
+  const wsRef = useRef(null)
 
   useEffect(() => {
-  const token = localStorage.getItem('token')  // or wherever you store JWT
-  
-  wsRef.current = new WebSocket(`ws://localhost:8080/ws?token=${token}`)
-
-  wsRef.current.onmessage = (event) => {
+    const token = localStorage.getItem('token')  // or wherever you store JWT
+    wsRef.current = new WebSocket(`ws://localhost:8080/ws?token=${token}`)
+    wsRef.current.onmessage = (event) => {
     const payload = JSON.parse(event.data)
-
     if (payload.type === 'history') {
         setMessages(payload.data)   
         console.log(payload)       // load history on connect
@@ -106,9 +95,7 @@ const wsRef = useRef(null)
         setMessages(prev => [...prev, payload.data])  // append new message
       }
     }
-
     wsRef.current.onerror = (err) => console.log('WS error:', err)
-
     return () => {
       wsRef.current?.close()   // ✅ clean up on logout/unmount
     }

@@ -25,6 +25,8 @@ function AssignmentQuestions({ onFinish }) {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {navigate('/'); return}
     dispatch({type: 'RESET'})
     getAssignmentQuestions()
   }, [assignment_id])

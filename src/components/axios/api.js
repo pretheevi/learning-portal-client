@@ -1,7 +1,7 @@
 import axios from 'axios'
-const BASE_URLS = ["http://localhost:8080/api"]
+const BASE_URLS = ["http://localhost:8080/api", "https://learning-portal-server-3qnw.onrender.com/api"]
 const API = axios.create({
-  baseURL: BASE_URLS[0], 
+  baseURL: BASE_URLS[1], 
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

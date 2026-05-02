@@ -10,8 +10,7 @@ function Profile() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchProfile = async () => {
+  const fetchProfile = async () => {
       try {
         const response = await API.get('/dashboard/profile')
         setUser(response.data.data)
@@ -21,6 +20,10 @@ function Profile() {
         setLoading(false)
       }
     }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(!token) { navigate('/'); return; }
     fetchProfile()
   }, [])
 
