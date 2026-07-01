@@ -3,6 +3,7 @@ import './quiz.css'
 import { useEffect, useReducer } from 'react'
 import API from '../axios/api'
 import { initialState, quizReducer } from './quizReducer'
+import { useState } from 'react'
 
 function AssignmentQuestions({ onFinish }) {
   const { assignment_id } = useParams()
@@ -31,8 +32,10 @@ function AssignmentQuestions({ onFinish }) {
     getAssignmentQuestions()
   }, [assignment_id])
 
+  const [submitLoading, setSubmitLoading] = useState(false)
   const handleSubmit = async () => {
     if (!selected) return
+    setSubmitLoading(true)
     const isCorrect = selected === currentQuestion.correct_option
     const pointsEarned = isCorrect ? currentQuestion.points : 0
     try {
@@ -42,10 +45,12 @@ function AssignmentQuestions({ onFinish }) {
         is_correct: isCorrect,
         points_earned: pointsEarned
       })
+      setSubmitLoading(false)
       // Only update UI after successful save
       if (isCorrect) dispatch({type: 'SUBMIT_CORRECT', payload: pointsEarned})
       else dispatch({type: 'SUBMIT_WRONG'})
     } catch (err) {
+      setSubmitLoading(false)
       console.log(err.response?.data)
     }
   }
@@ -173,7 +178,7 @@ function AssignmentQuestions({ onFinish }) {
             onClick={handleSubmit}
             disabled={!selected}
           >
-            Submit Answer
+            {submitLoading ? "Submitting..." : "Submit Answer"}
           </button>
         ) : (
           <>

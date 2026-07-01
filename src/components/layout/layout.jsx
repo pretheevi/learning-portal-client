@@ -21,7 +21,7 @@ function formatDate(dateString) {
   return `${day} ${month} ${year}`
 }
 
-const quizList = ['html', 'css', 'javascript', 'linux', 'os', 'github', 'react', 'node', 'sqlite', 'aptitude']
+const quizList = ['html', 'css', 'javascript', 'linux', 'os', 'github', 'react', 'node', 'sqlite', 'aptitude', 'python']
 const codeList = ['html', 'css', 'javascript', 'react', 'node', 'sqlite']
 
 const animations = [
@@ -46,6 +46,7 @@ function Layout() {
     setIsLoading(true)
     const path = `/dashboard/assignment?assignmentType=${assignmentType}&skill_type=${language === 'HTML5' ? 'HTML' : language}&limit=10&offset=0`
     try {
+      console.log(path)
       const response = await API.get(path)
       console.log(response.data)
       setAssignments(response.data.data)
@@ -59,6 +60,7 @@ function Layout() {
   const handleAssignmentClick = (as, assignmentType) => {
     if (!as.is_unlocked) return
     setActiveAssignmentId(as.assignment_id)
+    console.log(assignmentType)
     if (assignmentType === 'quiz') {
       navigate(`/dashboard/assignment/${as.assignment_id}`)
     } else {
