@@ -1,8 +1,8 @@
-
 import './fileSystem.css'
 import './layout.css'
 import Auth from '../auth/auth.jsx'
 import AssignmentQuestions from '../quiz/quiz.jsx'
+import CodeProblemList from '../code/codeProblemList.jsx'
 import Code from '../code/code.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faMessage, faUser } from '@fortawesome/free-solid-svg-icons'
@@ -64,6 +64,7 @@ function Layout() {
     if (assignmentType === 'quiz') {
       navigate(`/dashboard/assignment/${as.assignment_id}`)
     } else {
+      // Lands on the problem-list page first, not directly in the editor
       navigate(`/dashboard/assignmentCode/${as.assignment_id}`)
     }
   }
@@ -118,7 +119,8 @@ function Layout() {
       <div className="main-container">
         <Routes>
           <Route element={<AssignmentQuestions onFinish={() => setActiveAssignmentId(null)} />} path='assignment/:assignment_id' />
-          <Route element={<Code onFinish={() => setActiveAssignmentId(null)} />} path='assignmentCode/:problem_id' />
+          <Route element={<CodeProblemList onFinish={() => setActiveAssignmentId(null)} />} path='assignmentCode/:assignment_id' />
+          <Route element={<Code onFinish={() => setActiveAssignmentId(null)} />} path='assignmentCode/:assignment_id/problem/:problem_id' />
           <Route element={<Chat messages={messages} />} path='chat' />
           <Route element={<Profile />} path='profile' />              
         </Routes>

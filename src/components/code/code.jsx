@@ -21,13 +21,14 @@ function DifficultyBadge({ difficulty }) {
 }
 
 function Code({ onFinish }) {
-  const { problem_id } = useParams()
+  const { assignment_id, problem_id } = useParams()
   const navigate = useNavigate()
   const editorRef = useRef(null)
 
   const [problemData, setProblemData] = useState(null)
   const [language, setLanguage] = useState('javascript')
   const [code, setCode] = useState('')
+  const [functionName, setFunctionName] = useState('solve')
   const [status, setStatus] = useState(STATUS.IDLE)
   const [runResults, setRunResults] = useState([])
   const [submitResult, setSubmitResult] = useState(null)
@@ -42,9 +43,13 @@ function Code({ onFinish }) {
   async function fetchProblem() {
     try {
       const res = await API.get(`/dashboard/coding-problem/${problem_id}`)
+      console.log(res)
       const data = res.data.data
       setProblemData(data)
+      let a = data.examples[0]?.example_input
+      console.log(JSON.parse(a))
       setLanguage(data.problem.language || 'javascript')
+      setFunctionName(data.problem.function_name || 'solve')
       setCode(getStarterCode(data.problem.language))
     } catch (err) {
        console.log(err.response?.data)
@@ -52,9 +57,9 @@ function Code({ onFinish }) {
   }
 
   function getStarterCode(lang) {
-    if (lang === 'python') return `def solve():\n    pass`
+    if (lang === 'python') return `def ${functionName}():\n    pass`
     if (lang === 'java') return `class Main {\n    public static void main(String[] args) {\n\n    }\n}`
-    return `function solve() {\n\n}`
+    return `function ${functionName}() {\n\n}`
   }
 
   async function handleRun() {
@@ -62,8 +67,9 @@ function Code({ onFinish }) {
       setStatus(STATUS.RUNNING)
       setActiveTab('testcases')
       setRunResults([])
-      const res = await API.post('/dashboard/code/run', { problem_id, language, code })
-      setRunResults(res.data.results || [])
+      const res = await API.post('/dashboard/code/run', { problem_id, language, code, function_name: functionName })
+      setRunResults(res.data.data || [])
+      console.log(res)
     } catch (err) {
       console.log(err)
     } finally {
@@ -75,8 +81,9 @@ function Code({ onFinish }) {
     try {
       setStatus(STATUS.SUBMITTING)
       setActiveTab('results')
-      const res = await API.post('/dashboard/code/submit', { problem_id, language, code })
+      const res = await API.post('/dashboard/code/submit', { problem_id, language, code, function_name: functionName })
       setSubmitResult(res.data)
+      console.log(res)
     } catch (err) {
       console.log(err)
     } finally {
@@ -90,6 +97,14 @@ function Code({ onFinish }) {
     setCode(getStarterCode(lang))
   }
 
+  function handleBackToProblems() {
+    if (assignment_id) {
+      navigate(`/dashboard/assignmentCode/${assignment_id}`)
+    } else {
+      navigate(-1)
+    }
+  }
+
   if (!problemData) return <div className="code-page">Loading...</div>
 
   const info = problemData.problem
@@ -98,6 +113,9 @@ function Code({ onFinish }) {
     <div className="code-page">
       <div className="panel problem-panel">
         <div className="panel-header">
+          {assignment_id && (
+            <button className="back-link" onClick={handleBackToProblems}>← Problems</button>
+          )}
           <h3>{info.title}</h3>
           <DifficultyBadge difficulty={info.difficulty} />
         </div>
@@ -106,7 +124,7 @@ function Code({ onFinish }) {
           <h4>Examples</h4>
           {problemData.examples?.map((item, index) => (
             <div key={index} className="example-block">
-              <p><b>Input:</b> {item.example_input}</p>
+              <p><b>Input:</b> {JSON.stringify(JSON.parse(item.example_input).args)}</p>
               <p><b>Output:</b> {item.example_output}</p>
               {item.explanation && <p><b>Explanation:</b> {item.explanation}</p>}
             </div>
