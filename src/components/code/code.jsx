@@ -82,8 +82,8 @@ function Code({ onFinish }) {
       setStatus(STATUS.SUBMITTING)
       setActiveTab('results')
       const res = await API.post('/dashboard/code/submit', { problem_id, language, code, function_name: functionName })
-      setSubmitResult(res.data)
-      console.log(res)
+      setSubmitResult(res.data.data)
+      console.log(res.data.data.results)
     } catch (err) {
       console.log(err)
     } finally {
@@ -183,10 +183,10 @@ function Code({ onFinish }) {
           )}
           {activeTab === 'results' && submitResult && (
             <div>
-              <p><b>Passed:</b> {submitResult.total_testcase_pass}</p>
-              <p><b>Total:</b> {submitResult.total_cases}</p>
-              <p><b>Score:</b> {submitResult.score}</p>
-              <p><b>Submitted:</b> {submitResult.submitted_at}</p>
+              <p><b>Passed:</b> {submitResult?.total_testcase_pass}</p>
+              <p><b>Total:</b> {submitResult?.total_cases}</p>
+              <p><b>Score:</b> {submitResult?.score}</p>
+              <p><b>Submitted:</b> {submitResult?.submitted_at}</p>
             </div>
           )}
         </div>
